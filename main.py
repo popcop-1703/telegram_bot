@@ -4,7 +4,7 @@ import time
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-API_TOKEN = '5922594528:AAEgkkNcSNnMyA_o0JnbqwO6oBl4m4Bax5Y'  # никуда не скидывать
+API_TOKEN = ''  # никуда не скидывать
 
 logging.basicConfig(level=logging.INFO)
 
