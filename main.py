@@ -1,12 +1,12 @@
 import logging
 import time
-
+#from background import keep_alive
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-API_TOKEN = ''  # никуда не скидывать
+API_TOKEN = '5922594528:AAEgkkNcSNnMyA_o0JnbqwO6oBl4m4Bax5Y'  # никуда не скидывать
 
 text_human_and_society = 'ЧЕЛОВЕК И ОБЩЕСТВО\n \n1. Деятельность \n2. Познание \n3. Истина \n4. Человек \n5. Сознание' \
                          '\n6. Чувственное познание \n7. Рациональное познание \n8. Социальное познание \n9. Научное познание (наука) ' \
@@ -47,6 +47,12 @@ text_right = 'Право\n \n1.Норма права (правовая норм�
              '\n35. Уголовная ответственность \n36. Нормативно-правовой акт \n37. Трудовой договор \n38. Социальное государство \n39. Гражданский процесс \n40. Физическое лицо' \
              '\n41. Уголовный процесс \n42. Гражданство \n43. Конституция РФ \n44. Международное право \n45. Правоохранительные органы \n46. Альтернативная гражданская служба'
 
+hi_text = '\n\nДобро пожаловать в наш банк признаков, скорее ищи нужный! \n\n' \
+          'Перейдя по /menu, ты можешь найти интересующий тебя блок и термин, а далее просто написать номер, который ему соответствует.'
+support_text = 'Если у вас возникли вопросы по использованию бота или вы обнаружили ошибки, пишите сюда @murmurmr'
+howtouse_text = 'Чтобы найти нужные тебе признаки, необходимо нажать на меню и выбрать необходимый блок ❤' \
+                'Далее введи цифру, которая соответствует номеру твоего термина, к которому необходимо найти признаки'
+
 logging.basicConfig(level=logging.INFO)
 
 bot = Bot(token=API_TOKEN)
@@ -62,6 +68,14 @@ start_button = [
         types.KeyboardButton(text='/howtouse')
     ],
 ]
+
+
+async def set_default_commands(disp):
+    await disp.bot.set_my_commands([
+        types.BotCommand("start", "Start"),
+        types.BotCommand("help", "Help"),
+        types.BotCommand("settings", "Settings"),
+    ])
 
 
 class ProfileStateGroup(StatesGroup):
@@ -82,7 +96,7 @@ async def start(message: types.Message) -> None:
     # user_name = message.from_user.first_name
     user_full_name = message.from_user.full_name
     logging.info(f'{user_id} {user_full_name} {time.asctime()}')
-    await message.reply(f"Привет, {user_full_name}", reply_markup=keyboard_start)
+    await message.reply(f"Привет, {user_full_name} {hi_text}", reply_markup=keyboard_start)
 
 
 menuKB = InlineKeyboardMarkup(row_width=1)
@@ -96,7 +110,7 @@ menuKB.add(menuButton, menuButton2, menuButton3, menuButton4, menuButton5)
 
 @dp.message_handler(commands=['menu'], state='*')
 async def menu(message: types.Message):
-    await message.answer('тут меню', reply_markup=menuKB)
+    await message.answer('Выбери блок и введи цифру, которая соответствует номеру термина', reply_markup=menuKB)
     await ProfileStateGroup.menu_state.set()
     # await message.reply()
     # await callback.answer();
@@ -112,44 +126,44 @@ async def process_callback_menubutton(callback_query: types.CallbackQuery):
         await bot.send_message(chat_id=user_id,
                                text=text_human_and_society)
         await ProfileStateGroup.human_and_society_state.set()
-        await bot.answer_callback_query(callback_query.id, text='Нажата первая кнопка')
+        #await bot.answer_callback_query(callback_query.id, text='Нажата первая кнопка')
 
     elif code == 'menu_social_relations':
         await bot.send_message(chat_id=user_id,
                                text=text_social_relations)
         await ProfileStateGroup.social_relations_state.set()
-        await bot.answer_callback_query(callback_query.id, text='Нажата вторая кнопка')
+        #await bot.answer_callback_query(callback_query.id, text='Нажата вторая кнопка')
 
     elif code == 'menu_economy':
         await bot.send_message(chat_id=user_id,
                                text=text_economy)
         await ProfileStateGroup.economy_state.set()
-        await bot.answer_callback_query(callback_query.id, text='Нажата третья кнопка')
+        #await bot.answer_callback_query(callback_query.id, text='Нажата третья кнопка')
 
     elif code == 'menu_policy':
         await bot.send_message(chat_id=user_id,
                                text=text_policy)
         await ProfileStateGroup.policy_state.set()
-        await bot.answer_callback_query(callback_query.id, text='Нажата 4 кнопка')
+        #await bot.answer_callback_query(callback_query.id, text='Нажата 4 кнопка')
     elif code == 'menu_right':
         await bot.send_message(chat_id=user_id,
                                text=text_right)
         await ProfileStateGroup.right_state.set()
-        await bot.answer_callback_query(callback_query.id, text='Нажата 5 кнопка')
+        #await bot.answer_callback_query(callback_query.id, text='Нажата 5 кнопка')
     else:
         await bot.answer_callback_query(callback_query.id)
-    await bot.send_message(callback_query.from_user.id, f'Нажата инлайн кнопка! code={code} ')
+    #await bot.send_message(callback_query.from_user.id, f'Нажата инлайн кнопка! code={code} ')
     logging.info(ProfileStateGroup)
 
 
 @dp.message_handler(commands=['techsupport'], state='*')
 async def techSupport(message: types.Message):
-    await message.answer("Он во всем виноват - @Wam_Pan1")
+    await message.answer(f"{support_text}")
 
 
 @dp.message_handler(commands=['howtouse'], state='*')
 async def howToUse(message: types.Message):
-    await message.answer("тут должно быть про использование")
+    await message.answer(f"{howtouse_text}")
 
 
 """"
@@ -167,7 +181,7 @@ async def echo(message: types.Message):
 # def text_for_human_and_society():
 # сюда нужно запихнуть блоки ответов для меню(несколько функций)
 @dp.message_handler(state=ProfileStateGroup.right_state)
-async def human_and_society(message: types.Message):
+async def right(message: types.Message):
     user_id2 = message.from_user.id
     message_name = message.text
     user_full_name = message.from_user.full_name
@@ -412,10 +426,11 @@ async def human_and_society(message: types.Message):
                                   '\n2.	срок прохождения воинской службы 21 месяц, в организациях ВС РФ–18 месяцев '
                                   '\n3.	с гражданами, осуществляющими прохождение АГС, заключается трудовой договор')
     else:
-        await message.answer(text="Что-то странное ты ввел")
+        await message.answer(text="Введи цифру, которая соответствует номеру термина")
+
 
 @dp.message_handler(state=ProfileStateGroup.policy_state)
-async def human_and_society(message: types.Message):
+async def policy(message: types.Message):
     user_id2 = message.from_user.id
     message_name = message.text
     user_full_name = message.from_user.full_name
@@ -621,7 +636,7 @@ async def human_and_society(message: types.Message):
                                   '\n3.	могут применять принуждение'
                                   '\n4.	структурно обособлены')
     else:
-        await message.answer(text="Что-то странное ты ввел")
+        await message.answer(text="Введи цифру, которая соответствует номеру термина")
 
 
 @dp.message_handler(state=ProfileStateGroup.human_and_society_state)
@@ -847,7 +862,7 @@ async def human_and_society(message: types.Message):
                                   '\n2.	затрагивают жизнедеятельность всего человечества, мировой масштаб '
                                   '\n3.	от их решения зависит судьба всего человечества ')
     else:
-        await message.answer(text="Что-то странное ты ввел")
+        await message.answer(text="Введи цифру, которая соответствует номеру термина")
 
 
 @dp.message_handler(state=ProfileStateGroup.social_relations_state)
@@ -977,11 +992,11 @@ async def social_relations(message: types.Message):
                                   '\n4.	формирование под влиянием экранной культуры'
                                   '\n5.	проявление в виде значительного числа неформальных групп')
     else:
-        await message.answer(text="Что-то странное ты ввел")
+        await message.answer(text="Введи цифру, которая соответствует номеру термина")
 
 
 @dp.message_handler(state=ProfileStateGroup.economy_state)
-async def social_relations(message: types.Message):
+async def economy(message: types.Message):
     user_id3 = message.from_user.id
     message_name = message.text
     user_full_name = message.from_user.full_name
@@ -1000,7 +1015,7 @@ async def social_relations(message: types.Message):
         await message.reply(text='Факторы производства'
                                  '\n1.	имеются в ограниченном количестве'
                                  '\n2.	предполагает получение собственником ресурса денежных выплат-факторных доходов'
-                                 '\n2.	предполагает получение собственником ресурса денежных выплат-факторных доходов')
+                                 '\n3.	используется для создания благ')
     elif message_name == '4':
         await message.reply(text='Налог'
                                  '\n1.	обязательный платеж'
@@ -1180,8 +1195,8 @@ async def social_relations(message: types.Message):
                                  '\n2.	стандартизированный продукт'
                                  '\n3.	ни одна из этих фирм не способна воздействовать на рыночную цену')
     else:
-        await message.answer(text="Что-то странное ты ввел")
+        await message.answer(text="Введи цифру, которая соответствует номеру термина")
 
-
+#keep_alive()
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
