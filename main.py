@@ -6,7 +6,7 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-API_TOKEN = '5922594528:AAEgkkNcSNnMyA_o0JnbqwO6oBl4m4Bax5Y'  # никуда не скидывать
+API_TOKEN = ''  # никуда не скидывать
 
 text_human_and_society = 'ЧЕЛОВЕК И ОБЩЕСТВО\n \n1. Деятельность \n2. Познание \n3. Истина \n4. Человек \n5. Сознание' \
                          '\n6. Чувственное познание \n7. Рациональное познание \n8. Социальное познание \n9. Научное познание (наука) ' \
